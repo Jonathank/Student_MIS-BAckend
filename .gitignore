@@ -1,0 +1,10 @@
+node_modules
+# Keep environment variables out of version control
+.env
+node_modules
+.env
+docker-compose.override.yml
+.dockerenv
+docker-volume-data/
+docker-compose.yml
+Dokerfile
