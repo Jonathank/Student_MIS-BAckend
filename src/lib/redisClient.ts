@@ -1,9 +1,16 @@
 import { createClient } from "redis";
 
+// const redisClient = createClient({
+//   socket: {
+//     host: process.env.REDIS_HOST || "localhost",
+//     port: 6379,
+//   },
+// });
+
 const redisClient = createClient();
 const DEFAULT_EXPIRATION = Number(process.env.REDIS_EXPIRATION || 3600);
 
-redisClient.on("❌ error", (err) => {
+redisClient.on("error", (err) => {
     console.error("❌ Redis connection error:", err);
 });
 
@@ -64,6 +71,24 @@ async function clearCacheByPattern(pattern: string): Promise<void> {
         console.error("❌ Redis pattern clear error:", err);
     }
 }
+async function clearCacheBySimilarPattern(pattern: string): Promise<void> {
+  try {
+    const keys = await redisClient.keys(pattern);
+    if (keys.length > 0) {
+      await Promise.all(keys.map((key) => redisClient.del(key)));
+      console.log("🧹 Cleared keys matching:", pattern);
+    }
+  } catch (err) {
+    console.error("❌ Redis pattern clear error:", err);
+  }
+}
+
+process.on("SIGINT", async () => {
+  console.log("🛑 Closing Redis connection...");
+  await redisClient.quit();
+  process.exit(0);
+});
+
 
 export {
     redisClient,
