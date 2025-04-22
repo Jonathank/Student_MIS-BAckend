@@ -3,6 +3,7 @@ import ip from "ip";
 import cors from "cors";
  import TeacherRoutes from "./routes/TeachersRoutes";
 import StudentsRoutes from "./routes/StudentsRoutes";
+import ParentsRoutes from "./routes/ParentsRoutes";
 
 export class App {
     private readonly app: Application;
@@ -34,7 +35,7 @@ export class App {
     private routes(): void {
         this.app.use(`${this.API_PREFIX_List}`, TeacherRoutes);
         this.app.use(`${this.API_PREFIX_List}`, StudentsRoutes);
-
+        this.app.use(`${this.API_PREFIX_List}`, ParentsRoutes);
     }
 
 }
