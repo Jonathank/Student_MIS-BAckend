@@ -12,7 +12,7 @@ export class ParentsController {
         this.ParentsService = new ParentsService();
     }
 
-    public getAllParents = async (req: Request, res: Response): Promise<Response> => {
+    public getAllParents = async (req: Request, res: Response): Promise<any> => {
         console.info(`[${new Date().toLocaleString()}] Incoming ${req.method} ${req.originalUrl} Request from ${req.rawHeaders[0]} ${req.rawHeaders[1]}`);
 
         try {
@@ -20,11 +20,9 @@ export class ParentsController {
             const limit = parseInt(req.query.limit as string) || 10;
 
             // Extract optional filters
-            const classId = req.query.classId ? parseInt(req.query.classId as string) : undefined;
             const search = req.query.search as string | undefined;
             const gender = req.query.gender as string | undefined;
-            const teacherId = req.query.teacherId as string | undefined;
-
+            
             const parents = await this.ParentsService.getAllParents(
                 page,
                 limit,
@@ -42,7 +40,7 @@ export class ParentsController {
         }
     }
 
-    public getParentById = async (req: Request, res: Response): Promise<Response> => {
+    public getParentById = async (req: Request, res: Response): Promise<any> => {
         console.info(`[${new Date().toLocaleString()}] Incoming ${req.method} ${req.originalUrl} Request from ${req.rawHeaders[0]} ${req.rawHeaders[1]}`);
         try {
             const id = req.params.id;
