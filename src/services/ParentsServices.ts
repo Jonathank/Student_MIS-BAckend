@@ -54,16 +54,16 @@ export class ParentsService {
 
 
     async getAllParents(
-        page?: number,
-        limit?: number,
+        page: number,
+        limit: number,
         search?: string,
         gender?: string
     ) {
-        const cacheKey = `students:page=${page}&limit=${limit}&classId=${classId ?? ''}&search=${search ?? ''}&gender=${gender ?? ''}&teacherId=${teacherId ?? ''}`;
+        const cacheKey = `parents:page=${page}&limit=${limit}&search=${search ?? ''}&gender=${gender ?? ''}`;
 
         try {
             const cached = await getCache<{
-                data: Student[];
+                data: Parent[];
                 total: number;
                 page: number;
                 limit: number;
@@ -74,7 +74,7 @@ export class ParentsService {
 
             const skip = (page - 1) * limit;
 
-            const whereConditions: Prisma.StudentWhereInput[] = [];
+            const whereConditions: Prisma.ParentWhereInput[] = [];
 
             const genderEnum = parseEnumValue(UserSex, gender);
             if (genderEnum) {
@@ -92,53 +92,39 @@ export class ParentsService {
                 });
             }
 
-            if (classId) {
-                whereConditions.push({ classId });
-            }
-
-            if (teacherId) {
-                whereConditions.push({
-                    class: {
-                        lessons: {
-                            some: { teacherId },
-                        },
-                    },
-                });
-            }
-
-            const where: Prisma.StudentWhereInput = whereConditions.length
+        
+            const where: Prisma.ParentWhereInput = whereConditions.length
                 ? { AND: whereConditions }
                 : {};
 
-            const [students, total] = await Promise.all([
-                prisma.student.findMany({
+            const [parents, total] = await Promise.all([
+                prisma.parent.findMany({
                     where,
                     include: {
-                        grade: true,
-                        class: true,
+                       students : true,
                     },
                     skip,
                     take: limit,
                 }),
-                prisma.student.count({ where }),
+                prisma.parent.count({ where }),
             ]);
 
             const result = {
-                data: students,
+                data: parents,
                 total,
                 page,
                 limit,
                 totalPages: Math.ceil(total / limit),
             };
 
-            if (students.length > 0) {
+            if (parents.length > 0) {
                 await setCache(cacheKey, result);
             }
 
             return result;
         } catch (error: unknown) {
-            console.error("❌ Error retrieving students:", error);
-            throw new Error("❌ Failed to fetch students");
+            console.error("❌ Error retrieving Parents:", error);
+            throw new Error("❌ Failed to fetch Parents");
         }
     }
 

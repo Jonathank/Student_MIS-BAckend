@@ -1,13 +1,18 @@
 import { createClient } from "redis";
+import dotenv from 'dotenv';
+dotenv.config();
 
-// const redisClient = createClient({
-//   socket: {
-//     host: process.env.REDIS_HOST || "localhost",
-//     port: 6379,
-//   },
-// });
+const redisClient = createClient({
+    socket: {
+        host: process.env.REDIS_HOST ,
+        port: parseInt(process.env.REDIS_PORT || '6379', 10),
+    },
+    password: process.env.REDIS_PASSWORD,
+});
 
-const redisClient = createClient();
+
+
+//const redisClient = createClient();
 const DEFAULT_EXPIRATION = Number(process.env.REDIS_EXPIRATION || 3600);
 
 redisClient.on("error", (err) => {
@@ -82,6 +87,15 @@ async function clearCacheBySimilarPattern(pattern: string): Promise<void> {
     console.error("❌ Redis pattern clear error:", err);
   }
 }
+
+export function buildCacheKey(prefix: string, filters: Record<string, any>): string {
+    const query = new URLSearchParams(
+        Object.entries(filters).map(([key, val]) => [key, String(val ?? '')]) as [string, string][]
+    ).toString();
+
+    return `${prefix}:${query}`;
+}
+
 
 process.on("SIGINT", async () => {
   console.log("🛑 Closing Redis connection...");
