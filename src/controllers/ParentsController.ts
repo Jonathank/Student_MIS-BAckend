@@ -2,17 +2,17 @@ import { Request, Response } from "express";
 import { HttpResponse } from "../domain/Response";
 import { Code } from "../enum/Code.enum";
 import { Status } from "../enum/Status.enum";
-import { StudentsService } from "../services/StudentsServices";
+import { ParentsService } from "../services/ParentsServices";
 
-export class StudentsController {
+export class ParentsController {
 
-    private StudentsService: StudentsService;
+    private ParentsService: ParentsService;
 
     constructor() {
-        this.StudentsService = new StudentsService();
+        this.ParentsService = new ParentsService();
     }
 
-    public getAllStudents = async (req: Request, res: Response): Promise<any> => {
+    public getAllParents = async (req: Request, res: Response): Promise<Response> => {
         console.info(`[${new Date().toLocaleString()}] Incoming ${req.method} ${req.originalUrl} Request from ${req.rawHeaders[0]} ${req.rawHeaders[1]}`);
 
         try {
@@ -25,42 +25,40 @@ export class StudentsController {
             const gender = req.query.gender as string | undefined;
             const teacherId = req.query.teacherId as string | undefined;
 
-            const students = await this.StudentsService.getAllStudents(
+            const parents = await this.ParentsService.getAllParents(
                 page,
                 limit,
-                classId,
                 search,
                 gender,
-                teacherId
             );
 
             return res.status(Code.OK)
-                .json(new HttpResponse(Code.OK, Status.OK, 'Students retrieved', students));
+                .json(new HttpResponse(Code.OK, Status.OK, 'Parents retrieved', parents));
         } catch (error: unknown) {
-            console.error('❌ Error retrieving students:', error);
+            console.error('❌ Error retrieving Parents:', error);
 
             return res.status(Code.INTERNAL_SERVER_ERROR)
                 .json(new HttpResponse(Code.INTERNAL_SERVER_ERROR, Status.INTERNAL_SERVER_ERROR, '❌ An error occurred'));
         }
     }
 
-    public getStudentById = async (req: Request, res: Response): Promise<any> => {
+    public getParentById = async (req: Request, res: Response): Promise<Response> => {
         console.info(`[${new Date().toLocaleString()}] Incoming ${req.method} ${req.originalUrl} Request from ${req.rawHeaders[0]} ${req.rawHeaders[1]}`);
         try {
             const id = req.params.id;
-            // const page = parseInt(req.query.page as string) || 1;
-            // const limit = parseInt(req.query.limit as string) || 10;
-
-            const student = await this.StudentsService.getStudentById(id);
+            
+            const parent = await this.ParentsService.getParentById(id);
 
             return res.status(Code.OK)
-                .json(new HttpResponse(Code.OK, Status.OK, 'Student retrieved', student));
+                .json(new HttpResponse(Code.OK, Status.OK, 'Parent retrieved', parent));
         } catch (error: unknown) {
-            console.error('❌ Error retrieving student:', error);
+            console.error('❌ Error retrieving Parent:', error);
 
             return res.status(Code.INTERNAL_SERVER_ERROR)
                 .json(new HttpResponse(Code.INTERNAL_SERVER_ERROR, Status.INTERNAL_SERVER_ERROR, '❌ An error occurred'));
         }
-    }  
+    }
+
     
+
 }
