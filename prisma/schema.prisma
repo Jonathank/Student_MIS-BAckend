@@ -91,7 +91,7 @@ model Class {
   gradeId       Int
   announcements Annoucement[]
   grade         Grade         @relation(fields: [gradeId], references: [id])
-  supervisor    Teacher?      @relation(fields: [supervisorId], references: [id], onDelete: Restrict)
+ supervisor     Teacher?      @relation(fields: [supervisorId], references: [id], onDelete: Restrict)
   events        Event[]
   lessons       Lesson[]
   student       Student[]

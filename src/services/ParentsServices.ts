@@ -1,6 +1,4 @@
 import { Parent, Prisma, UserSex } from "../../generated/prisma/client";
-import prisma from "../lib/prisma";
-import { getCache, setCache } from "../lib/redisClient";
 import { parseEnumValue } from "../utils/ParseEnumValues";
 import { fetchByIdWithCache, fetchPaginatedWithCache } from "../utils/prismaFetchers";
 

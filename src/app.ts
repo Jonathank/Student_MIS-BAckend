@@ -5,6 +5,7 @@ import TeacherRoutes from "./routes/TeachersRoutes";
 import StudentsRoutes from "./routes/StudentsRoutes";
 import ParentsRoutes from "./routes/ParentsRoutes";
 import SubjectsRoutes from "./routes/SubjectsRoutes";
+import ClassesRoutes from "./routes/ClassesRoutes";
 
 export class App {
     private readonly app: Application;
@@ -38,6 +39,7 @@ export class App {
         this.app.use(`${this.API_PREFIX_List}`, StudentsRoutes);
         this.app.use(`${this.API_PREFIX_List}`, ParentsRoutes);
         this.app.use(`${this.API_PREFIX_List}`, SubjectsRoutes);
+        this.app.use(`${this.API_PREFIX_List}`, ClassesRoutes);
     }
 
 }
