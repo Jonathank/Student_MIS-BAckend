@@ -1,9 +1,10 @@
 import express, { Application } from "express";
 import ip from "ip";
 import cors from "cors";
- import TeacherRoutes from "./routes/TeachersRoutes";
+import TeacherRoutes from "./routes/TeachersRoutes";
 import StudentsRoutes from "./routes/StudentsRoutes";
 import ParentsRoutes from "./routes/ParentsRoutes";
+import SubjectsRoutes from "./routes/SubjectsRoutes";
 
 export class App {
     private readonly app: Application;
@@ -24,7 +25,7 @@ export class App {
     }
 
     private middleware(): void {
-        this.app.use(cors({ origin: '*' }));
+        this.app.use(cors({ origin: 'http://localhost:3000' }));
         this.app.use(express.json());
         this.app.use((req, res, next) => {
             console.log(`[${req.method}] ${req.originalUrl}`);
@@ -36,6 +37,7 @@ export class App {
         this.app.use(`${this.API_PREFIX_List}`, TeacherRoutes);
         this.app.use(`${this.API_PREFIX_List}`, StudentsRoutes);
         this.app.use(`${this.API_PREFIX_List}`, ParentsRoutes);
+        this.app.use(`${this.API_PREFIX_List}`, SubjectsRoutes);
     }
 
 }
