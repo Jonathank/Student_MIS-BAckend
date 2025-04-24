@@ -47,6 +47,7 @@ export class TeachersService {
                 whereConditions.push({ sex: genderEnum });
             }
             if (search) {
+                
                 whereConditions.push({
                     OR: [
                         { id: { contains: search, mode: "insensitive" } },
